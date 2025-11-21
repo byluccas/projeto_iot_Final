@@ -1,0 +1,6 @@
+import os
+
+# Configurações do Flask
+FLASK_HOST = "0.0.0.0"
+FLASK_PORT = 5000
+DEBUG = True

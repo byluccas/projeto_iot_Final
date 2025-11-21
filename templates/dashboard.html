@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Monitoramento IoT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Monitoramento IoT</h1>
+            <p>Monitoramento em tempo real de variáveis ambientais</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Card de Temperatura -->
+            <div class="card">
+                <div class="card-icon">🌡️</div>
+                <h2>Temperatura</h2>
+                <div class="value">{{ data.temperature }}°C</div>
+                <div class="status">
+                    {% if data.temperature > 30 %}
+                    <span class="status-high">Alta - Ventilador recomendado</span>
+                    {% elif data.temperature < 18 %}
+                    <span class="status-low">Baixa - Aquecimento recomendado</span>
+                    {% else %}
+                    <span class="status-normal">Normal</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💧</div>
+                <h2>Umidade</h2>
+                <div class="value">{{ data.humidity }}%</div>
+                <div class="status">
+                    {% if data.humidity < 40 %}
+                    <span class="status-low">Baixa - Umidificador recomendado</span>
+                    {% elif data.humidity > 70 %}
+                    <span class="status-high">Alta - Ventilação recomendada</span>
+                    {% else %}
+                    <span class="status-normal">Normal</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">👤</div>
+                <h2>Presença</h2>
+                <div class="value">{{ 'Detectada' if data.presence else 'Não detectada' }}</div>
+                <div class="status-icon {{ 'present' if data.presence else 'absent' }}">
+                    {{ '✅' if data.presence else '❌' }}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💨</div>
+                <h2>Ventilador</h2>
+                <div class="value {{ 'device-on' if data.fan_status == 'ON' else 'device-off' }}">
+                    {{ data.fan_status }}
+                </div>
+                <div class="controls">
+                    <button class="btn btn-on {{ 'active' if data.fan_status == 'ON' else '' }}" 
+                            onclick="controlDevice('ventilador', 'ON')">
+                        Ligar
+                    </button>
+                    <button class="btn btn-off {{ 'active' if data.fan_status == 'OFF' else '' }}" 
+                            onclick="controlDevice('ventilador', 'OFF')">
+                        Desligar
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🌫️</div>
+                <h2>Umidificador</h2>
+                <div class="value {{ 'device-on' if data.humidifier_status == 'ON' else 'device-off' }}">
+                    {{ data.humidifier_status }}
+                </div>
+                <div class="controls">
+                    <button class="btn btn-on {{ 'active' if data.humidifier_status == 'ON' else '' }}" 
+                            onclick="controlDevice('umidificador', 'ON')">
+                        Ligar
+                    </button>
+                    <button class="btn btn-off {{ 'active' if data.humidifier_status == 'OFF' else '' }}" 
+                            onclick="controlDevice('umidificador', 'OFF')">
+                        Desligar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="last-update">
+            <p>Última atualização: {{ data.timestamp }}</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
